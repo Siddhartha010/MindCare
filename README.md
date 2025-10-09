@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🧠 MindCare - AI-Powered Mental Health Care System
 
 A modern, interactive web application for tracking and improving mental well-being through weekly assessments, progress analytics, and AI-powered assistance.
@@ -155,3 +156,7 @@ For support and questions, please open an issue in the repository or contact the
 ---
 
 **MindCare** - Your journey to better mental health starts here! 🌟
+=======
+# Mental-Health-Care-System
+AI-powered Mental Health Care System that leverages machine learning and NLP to provide early detection of stress, anxiety, and depression. It offers mood tracking, personalized support, and resources, aiming to improve accessibility and awareness in mental health care.
+>>>>>>> 5be9c7b1491feeca6cf95d8aefb6901d9f708085
