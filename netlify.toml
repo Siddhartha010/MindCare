@@ -1,0 +1,9 @@
+[build]
+  publish = "client/build"
+  # Ensure dependencies are installed inside the client folder before building
+  command = "npm ci --prefix client && npm --prefix client run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
