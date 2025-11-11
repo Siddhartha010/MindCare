@@ -97,7 +97,7 @@ const Quiz = ({ user }) => {
             <button onClick={() => window.location.reload()} className="btn btn-primary">
               Take Again
             </button>
-            <button onClick={() => window.location.href = '/dashboard'} className="btn btn-outline">
+            <button onClick={() => { window.location.href = '/dashboard'; window.location.reload(); }} className="btn btn-outline">
               View Progress
             </button>
             <button onClick={() => window.location.href = '/mood'} className="btn btn-secondary">

@@ -32,7 +32,16 @@ const Dashboard = ({ user }) => {
   useEffect(() => {
     fetchProgressData();
     fetchAnalytics();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user.id]); // Refetch when user changes
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchProgressData();
+      fetchAnalytics();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [user.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProgressData = async () => {
     try {
@@ -115,6 +124,13 @@ const Dashboard = ({ user }) => {
       <div className="card-header" style={{ color: 'white', textAlign: 'center', marginBottom: '2rem' }}>
         <h1>Your Mental Health Dashboard</h1>
         <p>Track your progress and insights</p>
+        <button 
+          onClick={() => { fetchProgressData(); fetchAnalytics(); }} 
+          className="btn btn-outline" 
+          style={{ marginTop: '1rem' }}
+        >
+          🔄 Refresh Data
+        </button>
       </div>
 
       <Gamification user={user} />
