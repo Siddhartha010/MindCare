@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import API from '../utils/api';
+import ChatMessage from '../components/ChatMessage';
+import './Chatbot.css';
 
 const Chatbot = ({ user }) => {
   const [messages, setMessages] = useState([]);
@@ -7,21 +9,8 @@ const Chatbot = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    fetchChatHistory();
-    // Add welcome message
-    setMessages([{
-      type: 'bot',
-      message: `Hello ${user.username}! 👋 I'm your AI mental health assistant. I can help you with stress management, sleep tips, diet advice, exercise suggestions, and relaxation techniques. What would you like to know about today?`,
-      timestamp: new Date()
-    }]);
-  }, []);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const fetchChatHistory = async () => {
+    if (!user || !user.id) return;
     try {
       const response = await API.get(`/api/chatbot/history/${user.id}`);
       const history = response.data.map(item => [
@@ -33,6 +22,23 @@ const Chatbot = ({ user }) => {
       console.error('Error fetching chat history:', error);
     }
   };
+
+  useEffect(() => {
+    if (!user || !user.username) return;
+    fetchChatHistory();
+    // Add welcome message
+    setMessages([{
+      type: 'bot',
+      message: `Hello ${user.username}! 👋 I'm your AI mental health assistant. I can help you with stress management, sleep tips, diet advice, exercise suggestions, and relaxation techniques. What would you like to know about today?`,
+      timestamp: new Date()
+    }]);
+  }, [user && user.username]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -105,26 +111,21 @@ const Chatbot = ({ user }) => {
         <div className="chat-container">
           <div className="chat-messages">
             {messages.map((msg, index) => (
-              <div key={index} className={`chat-message ${msg.type}`}>
-                <div style={{ marginBottom: '0.25rem', fontSize: '0.875rem', opacity: 0.7 }}>
-                  {msg.type === 'user' ? 'You' : 'AI Assistant'} • {msg.timestamp.toLocaleTimeString()}
-                </div>
-                {msg.message}
-              </div>
+              <ChatMessage
+                key={index}
+                message={msg.message}
+                type={msg.type}
+                timestamp={msg.timestamp}
+                isTyping={false}
+              />
             ))}
             {loading && (
-              <div className="chat-message bot">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div style={{ 
-                    width: '8px', 
-                    height: '8px', 
-                    borderRadius: '50%', 
-                    background: 'var(--primary)',
-                    animation: 'pulse 1.5s infinite'
-                  }} />
-                  AI Assistant is typing...
-                </div>
-              </div>
+              <ChatMessage
+                message=""
+                type="bot"
+                timestamp={new Date()}
+                isTyping={true}
+              />
             )}
             <div ref={messagesEndRef} />
           </div>

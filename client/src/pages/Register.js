@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../utils/api';
+import emailService from '../utils/emailService';
 
 const Register = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -39,6 +40,9 @@ const Register = ({ setUser }) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       setUser(response.data.user);
+      
+      // Send welcome email
+      emailService.sendWelcomeEmail(response.data.user);
     } catch (error) {
       setError(error.response?.data?.error || 'Registration failed');
     } finally {

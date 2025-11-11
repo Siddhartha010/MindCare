@@ -157,6 +157,113 @@ For support and questions, please open an issue in the repository or contact the
 
 **MindCare** - Your journey to better mental health starts here! 🌟
 =======
-# Mental-Health-Care-System
-AI-powered Mental Health Care System that leverages machine learning and NLP to provide early detection of stress, anxiety, and depression. It offers mood tracking, personalized support, and resources, aiming to improve accessibility and awareness in mental health care.
+# Mental Health Care System
+
+## Deployment Guide
+
+### Prerequisites
+- Node.js (v14 or higher)
+- PostgreSQL database
+- EmailJS account for email notifications
+
+### Environment Variables
+Before deploying, make sure to set up the following environment variables:
+
+```env
+# Database connection
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_NAME=your_db_name
+DB_HOST=your_db_host
+DB_PORT=5432
+
+# JWT secret
+JWT_SECRET=your_secure_jwt_secret
+
+# Node environment
+NODE_ENV=production
+
+# EmailJS Configuration
+EMAILJS_SERVICE_ID=your_emailjs_service_id
+EMAILJS_USER_ID=your_emailjs_user_id
+EMAILJS_WELCOME_TEMPLATE_ID=your_welcome_template_id
+EMAILJS_REPORT_TEMPLATE_ID=your_report_template_id
+```
+
+### Deployment Steps
+
+1. **Prepare the Application**
+   ```bash
+   # Install dependencies for backend
+   npm install
+   
+   # Install dependencies for frontend
+   cd client
+   npm install
+   
+   # Build the frontend
+   npm run build
+   cd ..
+   ```
+
+2. **Database Setup**
+   - Create a PostgreSQL database
+   - Run the database initialization script:
+     ```bash
+     npm run setup-db
+     ```
+
+3. **Platform-specific Deployment**
+
+   #### Option 1: Heroku
+   ```bash
+   # Install Heroku CLI
+   # Login to Heroku
+   heroku login
+   
+   # Create a new Heroku app
+   heroku create your-app-name
+   
+   # Add PostgreSQL addon
+   heroku addons:create heroku-postgresql:hobby-dev
+   
+   # Set environment variables
+   heroku config:set JWT_SECRET=your_secure_jwt_secret
+   heroku config:set EMAILJS_SERVICE_ID=your_emailjs_service_id
+   heroku config:set EMAILJS_USER_ID=your_emailjs_user_id
+   heroku config:set EMAILJS_WELCOME_TEMPLATE_ID=your_welcome_template_id
+   heroku config:set EMAILJS_REPORT_TEMPLATE_ID=your_report_template_id
+   
+   # Deploy the application
+   git push heroku main
+   ```
+
+   #### Option 2: Railway
+   - Create a new project on Railway
+   - Connect your GitHub repository
+   - Add PostgreSQL plugin
+   - Set environment variables in Railway dashboard
+   - Deploy from main branch
+
+   #### Option 3: Render
+   - Create a new Web Service on Render
+   - Connect your GitHub repository
+   - Add PostgreSQL database
+   - Set environment variables
+   - Deploy from main branch
+
+### Post-deployment
+1. Verify the application is running correctly
+2. Test user registration and login
+3. Confirm email notifications are working
+4. Monitor application logs for any errors
+
+### Maintenance
+- Regularly backup the database
+- Monitor application performance
+- Keep dependencies updated
+- Review security best practices
+
+### Support
+For deployment issues or questions, please open an issue in the repository.
 >>>>>>> 5be9c7b1491feeca6cf95d8aefb6901d9f708085

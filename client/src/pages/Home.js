@@ -1,56 +1,58 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Home = () => {
+const Home = ({ user }) => {
   return (
     <div className="container">
       <div className="fade-in" style={{ textAlign: 'center', padding: '4rem 0', color: 'white' }}>
         <h1 style={{ fontSize: '3.5rem', marginBottom: '1rem', fontWeight: '800', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-          Welcome to MindCare
+          {user ? `Welcome back, ${user.username}!` : 'Welcome to MindCare'}
         </h1>
         <p style={{ fontSize: '1.3rem', marginBottom: '2rem', opacity: 0.95, fontWeight: '400', lineHeight: '1.6' }}>
           Your AI-powered mental health companion for tracking and improving well-being
         </p>
-        <Link to="/register" className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
-          Get Started Today
-        </Link>
+        {!user && (
+          <Link to="/register" className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
+            Get Started Today
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-2" style={{ marginTop: '4rem' }}>
-        <a href="/mood" className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={user ? "/mood" : "/login"} className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="card-header">
             <h3 className="card-title">🌈 Mood Tracking</h3>
           </div>
           <p>Track your daily emotions with simple emoji selections and gain insights into your emotional patterns.</p>
-        </a>
+        </Link>
 
-        <a href="/quiz" className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={user ? "/quiz" : "/login"} className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="card-header">
             <h3 className="card-title">📊 Weekly Assessments</h3>
           </div>
           <p>Take our scientifically-backed 10-question quiz to track your mental health progress over time.</p>
-        </a>
+        </Link>
 
-        <a href="/wellness" className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={user ? "/wellness" : "/login"} className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="card-header">
             <h3 className="card-title">💡 Wellness Tips</h3>
           </div>
           <p>Access evidence-based practices and daily tips for better mental health and well-being.</p>
-        </a>
+        </Link>
 
-        <a href="/community" className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={user ? "/community" : "/login"} className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="card-header">
             <h3 className="card-title">💬 Community Q&A</h3>
           </div>
           <p>Ask questions and get support from the community. Share experiences and help others on their wellness journey.</p>
-        </a>
+        </Link>
 
-        <a href="/chatbot" className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={user ? "/chatbot" : "/login"} className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="card-header">
             <h3 className="card-title">🤖 AI Assistant</h3>
           </div>
           <p>Get personalized advice on diet, exercise, relaxation techniques, and mental wellness strategies.</p>
-        </a>
+        </Link>
       </div>
 
       <div className="why-choose-section" style={{ marginTop: '4rem' }}>

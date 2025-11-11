@@ -1,0 +1,89 @@
+.activities-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.activities-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.activities-table {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.activities-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.activities-table th {
+  background: var(--primary);
+  color: white;
+  text-align: left;
+  padding: 1rem;
+  font-weight: 600;
+}
+
+.activities-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.activities-table tr:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.activity-type {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.activity-type.page_view { background: #e0e7ff; color: #4338ca; }
+.activity-type.login { background: #dcfce7; color: #15803d; }
+.activity-type.quiz { background: #fff7ed; color: #c2410c; }
+.activity-type.mood { background: #fef3c7; color: #92400e; }
+.activity-type.chat { background: #f3e8ff; color: #7e22ce; }
+
+.activities-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  outline: none;
+}
+
+.filter-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.no-activities {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray);
+  background: white;
+  border-radius: 1rem;
+  margin-top: 2rem;
+}

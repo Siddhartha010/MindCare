@@ -1,0 +1,31 @@
+{
+  "name": "mental-health-care-system",
+  "version": "1.0.0",
+  "description": "AI-powered Mental Health Care System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "npm run dev:server",
+    "dev:server": "nodemon server.js",
+    "dev:client": "cd client && npm start",
+    "client": "cd client && npm start",
+    "server": "nodemon server.js",
+    "setup-db": "node setup-db.js",
+    "setup-advanced-db": "node setup-advanced-db.js",
+    "dev:db": "docker-compose up -d",
+    "build": "cd client && npm run build"
+  },
+  "dependencies": {
+    "@emailjs/nodejs": "^5.0.2",
+    "axios": "^1.5.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -4,11 +4,6 @@ import API from '../utils/api';
 const Gamification = ({ user }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
   const fetchStats = async () => {
     try {
       const response = await API.get(`/api/gamification/${user.id}`);
@@ -19,6 +14,12 @@ const Gamification = ({ user }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!user || !user.id) return;
+    fetchStats();
+    // only re-run when the user id changes
+  }, [user && user.id]);
 
   if (loading) return <div>Loading stats...</div>;
   if (!stats) return null;

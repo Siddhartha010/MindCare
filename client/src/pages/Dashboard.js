@@ -238,11 +238,21 @@ const Dashboard = ({ user }) => {
         <button 
           onClick={async () => {
             try {
-              const response = await fetch(`/api/reports/send/${user.id}`, { method: 'POST' });
-              const data = await response.json();
-              alert(data.message);
+              const response = await API.post(`/api/reports/send/${user.id}`);
+              const { reportData, userEmail, userName } = response.data;
+              
+              // Import email service
+              const emailService = (await import('../utils/emailService')).default;
+              const result = await emailService.sendReportEmail(userEmail, userName, reportData);
+              
+              if (result.success) {
+                alert('✅ Report sent successfully to ' + userEmail);
+              } else {
+                alert('❌ Failed to send email: ' + result.error);
+              }
             } catch (error) {
-              alert('Error sending report');
+              console.error('Error sending report email:', error);
+              alert('Error: ' + (error.response?.data?.error || error.message));
             }
           }} 
           className="btn btn-primary" 
@@ -255,6 +265,7 @@ const Dashboard = ({ user }) => {
       <div className="card" style={{ textAlign: 'center' }}>
         <h3>📧 Email Reports</h3>
         <p>Get comprehensive mental health reports sent directly to your email with detailed insights, progress tracking, and personalized recommendations.</p>
+        <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: 'var(--gray)' }}>Reports are automatically sent to the email address associated with your account.</p>
       </div>
 
       {progressData.length === 0 && (

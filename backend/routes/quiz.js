@@ -1,6 +1,6 @@
 const express = require('express');
-const simpleDB = require('../config/simple-db');
-const emailService = require('../services/emailService');
+const { getPool } = require('../config/database');
+const pool = getPool();
 
 const router = express.Router();
 
@@ -22,15 +22,14 @@ router.get('/questions', (req, res) => {
   res.json(quizQuestions);
 });
 
-// Submit quiz responses
+// Submit quiz with MySQL operations
 router.post('/submit', async (req, res) => {
+  const connection = await pool.getConnection();
   try {
     const { userId, responses, weekNumber } = req.body;
-    
-    // Calculate score (0-3 points per question)
     const score = responses.reduce((total, response) => total + response, 0);
     
-    // Determine mental health level (higher scores = better mental health)
+    // Determine mental health level
     let level;
     if (score <= 4) level = 'Severe - Seek Help';
     else if (score <= 9) level = 'Poor';
@@ -38,12 +37,48 @@ router.post('/submit', async (req, res) => {
     else if (score <= 19) level = 'Good';
     else level = 'Excellent';
     
-    const result = simpleDB.createQuizResponse(userId, weekNumber, responses, score, level);
+    await connection.beginTransaction();
     
-    // Get user stats for email report
-    const userStats = simpleDB.getUserStats(userId);
+    // Insert quiz response with duplicate key update
+    const [quizResult] = await connection.execute(`
+      INSERT INTO quiz_responses (user_id, week_number, responses, score, mental_health_level, completion_time)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE 
+        responses = VALUES(responses),
+        score = VALUES(score),
+        mental_health_level = VALUES(mental_health_level),
+        completion_time = VALUES(completion_time),
+        created_at = NOW()
+    `, [userId, weekNumber, JSON.stringify(responses), score, level, 120]);
     
-    // Generate recommendation based on scoring
+    // Get user statistics with complex query
+    const [statsResult] = await connection.execute(`
+      SELECT 
+        us.*,
+        u.username,
+        u.email,
+        COUNT(DISTINCT ua.id) as badge_count,
+        JSON_ARRAYAGG(
+          CASE WHEN ua.id IS NOT NULL THEN
+            JSON_OBJECT(
+              'name', ua.achievement_name,
+              'icon', ua.icon,
+              'description', ua.description
+            )
+          END
+        ) as badges
+      FROM user_statistics us
+      JOIN users u ON us.user_id = u.id
+      LEFT JOIN user_achievements ua ON us.user_id = ua.user_id
+      WHERE us.user_id = ?
+      GROUP BY us.id, u.username, u.email
+    `, [userId]);
+    
+    await connection.commit();
+    
+    const userStats = statsResult[0];
+    
+    // Generate recommendation
     let recommendation = 'Continue your wellness journey!';
     if (score <= 4) recommendation = 'Please seek immediate professional mental health support. You deserve care and help is available.';
     else if (score <= 9) recommendation = 'Your mental health needs attention. Consider speaking with a counselor or therapist.';
@@ -51,26 +86,25 @@ router.post('/submit', async (req, res) => {
     else if (score <= 19) recommendation = 'Good mental health! Continue your current wellness practices and stay active.';
     else recommendation = 'Excellent! Your mental health is in great shape. Keep maintaining your positive lifestyle!';
     
-    // Send email report
-    const reportData = {
-      score,
-      level,
-      points: userStats.points,
-      streak: userStats.currentStreak,
-      badges: userStats.badges,
-      recommendation
-    };
-    
-    emailService.sendReport('user@example.com', reportData);
-    
     res.json({ 
       score, 
       level, 
-      message: `Your mental health assessment is complete. Score: ${score}/30. Report sent to your email!`,
-      data: result
+      message: `Assessment complete. Score: ${score}/30`,
+      userStats: {
+        wellness_points: userStats.wellness_points,
+        current_streak: userStats.current_streak,
+        total_quizzes: userStats.total_quizzes,
+        badges: userStats.badges ? JSON.parse(userStats.badges).filter(b => b !== null) : []
+      },
+      recommendation
     });
+    
   } catch (error) {
+    await connection.rollback();
+    console.error('Quiz submission error:', error);
     res.status(500).json({ error: error.message });
+  } finally {
+    connection.release();
   }
 });
 

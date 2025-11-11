@@ -11,9 +11,19 @@ const Navbar = ({ user, logout }) => {
         
         <ul className="nav-links">
           <li><Link to="/">Home</Link></li>
-          {user && (
+          {user && !user.is_admin && (
             <>
               <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/quiz">Quiz</Link></li>
+              <li><Link to="/mood">Mood Tracker</Link></li>
+              <li><Link to="/chatbot">AI Assistant</Link></li>
+              <li><Link to="/community">Community</Link></li>
+            </>
+          )}
+          {user?.is_admin && (
+            <>
+              <li><Link to="/admin" className="admin-link">User Activities</Link></li>
+              <li><Link to="/admin/analytics" className="admin-link">Analytics</Link></li>
             </>
           )}
         </ul>
@@ -21,7 +31,7 @@ const Navbar = ({ user, logout }) => {
         <div className="nav-auth">
           {user ? (
             <>
-              <span style={{ color: 'white', fontWeight: '500', marginRight: '1rem' }}>
+              <span style={{ color: 'black', fontWeight: '500', marginRight: '1rem' }}>
                 Welcome, {user.username}! 👋
               </span>
               <button onClick={logout} className="btn btn-outline">

@@ -1,25 +1,9 @@
 {
   "name": "mental-health-care-system",
   "version": "1.0.0",
-  "description": "AI-powered Mental Health Care System",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "client": "cd client && npm start",
-    "server": "nodemon server.js",
-    "build": "cd client && npm run build"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "pg": "^8.11.3",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "axios": "^1.5.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd client && npm start",
+    "dev": "npm run backend"
   }
 }

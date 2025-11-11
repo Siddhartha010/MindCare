@@ -1,86 +1,63 @@
-const { Pool } = require('pg');
+// setup-db.js
+// This script initializes the application's database schema.
+// It prefers calling `pool.initDB()` exported by `config/database.js` so
+// it works regardless of the underlying database implementation (Postgres,
+// SQLite, etc.). If you need to create a Postgres database at the server
+// level (i.e. `CREATE DATABASE`), set environment variable
+// `PG_ADMIN=true` and ensure `pg` is available in the environment.
 
-// First connect to postgres database to create our database
-const adminPool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres', // Connect to default postgres database
-  password: 'password',
-  port: 5432,
-});
+const path = require('path');
 
-const setupDatabase = async () => {
+const run = async () => {
+  console.log('🔧 Running setup-db...');
+
+  // Try to load the project's database module which should export a pool
+  // object with an `initDB` function. This decouples the setup script from
+  // any specific database implementation.
   try {
-    console.log('🔧 Setting up database...');
-    
-    // Create database if it doesn't exist
-    try {
-      await adminPool.query('CREATE DATABASE mental_health_db');
-      console.log('✅ Database "mental_health_db" created successfully!');
-    } catch (error) {
-      if (error.code === '42P04') {
-        console.log('ℹ️  Database "mental_health_db" already exists');
-      } else {
-        throw error;
+    const pool = require(path.join(__dirname, 'config', 'database'));
+
+    if (pool && typeof pool.initDB === 'function') {
+      console.log('➡️  Calling pool.initDB() to create tables...');
+      await pool.initDB();
+      console.log('🎉 Database initialization complete.');
+      process.exit(0);
+    }
+
+    console.log('⚠️  No initDB() found on pool. Nothing to do.');
+    process.exit(0);
+  } catch (err) {
+    // If the user explicitly asked for Postgres admin mode, try the old
+    // behavior to create a Postgres database using the `pg` module.
+    if (process.env.PG_ADMIN === 'true') {
+      try {
+        // Lazy require pg so projects that switched away from Postgres don't
+        // need the package installed for normal setup.
+        // eslint-disable-next-line global-require
+        const { Pool } = require('pg');
+
+        const adminPool = new Pool({
+          user: process.env.DB_USER || 'postgres',
+          host: process.env.DB_HOST || 'localhost',
+          database: process.env.PG_ADMIN_DB || 'postgres',
+          password: process.env.DB_PASSWORD || 'password',
+          port: process.env.DB_PORT || 5432,
+        });
+
+        console.log('➡️  Creating Postgres database (PG_ADMIN mode)...');
+        await adminPool.query(`CREATE DATABASE ${process.env.DB_NAME || 'mental_health_db'}`);
+        await adminPool.end();
+        console.log('✅ Postgres database created. You may still need to run pool.initDB()');
+        process.exit(0);
+      } catch (pgErr) {
+        console.error('❌ PG admin flow failed:', pgErr && pgErr.message ? pgErr.message : pgErr);
+        process.exit(1);
       }
     }
-    
-    await adminPool.end();
-    
-    // Now connect to our database and create tables
-    const appPool = new Pool({
-      user: 'postgres',
-      host: 'localhost',
-      database: 'mental_health_db',
-      password: 'password',
-      port: 5432,
-    });
-    
-    // Create tables
-    await appPool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    
-    await appPool.query(`
-      CREATE TABLE IF NOT EXISTS quiz_responses (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
-        week_number INTEGER NOT NULL,
-        responses JSONB NOT NULL,
-        score INTEGER NOT NULL,
-        mental_health_level VARCHAR(20) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    
-    await appPool.query(`
-      CREATE TABLE IF NOT EXISTS chat_history (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
-        message TEXT NOT NULL,
-        response TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    
-    console.log('✅ All tables created successfully!');
-    
-    await appPool.end();
-    console.log('🎉 Database setup complete!');
-    
-  } catch (error) {
-    console.error('❌ Database setup failed:', error.message);
-    console.log('\n💡 Make sure:');
-    console.log('1. PostgreSQL is installed and running');
-    console.log('2. Username is "postgres" and password is "password"');
-    console.log('3. PostgreSQL is running on port 5432');
+
+    console.error('❌ setup-db failed with error:', err && err.message ? err.message : err);
+    process.exit(1);
   }
 };
 
-setupDatabase();
+run();

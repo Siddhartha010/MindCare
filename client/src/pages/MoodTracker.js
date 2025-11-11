@@ -18,11 +18,8 @@ const MoodTracker = ({ user }) => {
     { emoji: '🤗', name: 'Grateful', value: 5, color: '#ec4899' }
   ];
 
-  useEffect(() => {
-    fetchMoodHistory();
-  }, []);
-
   const fetchMoodHistory = async () => {
+    if (!user || !user.id) return;
     try {
       const response = await API.get(`/api/mood/${user.id}`);
       setMoodHistory(response.data);
@@ -30,6 +27,12 @@ const MoodTracker = ({ user }) => {
       console.error('Error fetching mood history:', error);
     }
   };
+
+  useEffect(() => {
+    if (!user || !user.id) return;
+    fetchMoodHistory();
+    // run when user id changes
+  }, [user && user.id]);
 
   const saveMood = async () => {
     if (!selectedMood) return;

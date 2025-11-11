@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "email": "agarwalsiddharth010@gmail.com",
+      "password": "$2a$10$VtN2uXSlN5bZEwO5cCXHeO0rdc25e/VSuooGwTh3tXW.te71c7VbW",
+      "is_admin": true,
+      "created_at": "2025-10-09T18:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "username": "siddharth",
+      "email": "redyvgggc@gmail.com",
+      "password": "$2a$10$UlB8uu.EJb3.d6GWOIvDCOIKWRTGsYhOXK4WiwuvWo1gA1Hi6pGo.",
+      "is_admin": false,
+      "created_at": "2025-10-09T18:12:57.696Z"
+    },
+    {
+      "id": 4,
+      "username": " m  kj k",
+      "email": "f6318616@gmail.com",
+      "password": "$2a$10$bVghocwvdNRPSaYcidUFueqCBYvk52LeicHpBFPBrhR0LR.u2.RkG",
+      "is_admin": false,
+      "created_at": "2025-10-09T18:17:09.665Z"
+    },
+    {
+      "id": 5,
+      "username": "siddharth",
+      "email": "redyvgggc1122@gmail.com",
+      "password": "$2a$10$leUkEf8SpGt71uHduJVbQO4YwMzfiORwPe4lVlu39tP1Q675KPxli",
+      "is_admin": false,
+      "created_at": "2025-10-21T11:19:11.381Z"
+    }
+  ],
+  "quizResponses": [],
+  "chatHistory": [],
+  "moodEntries": [],
+  "nextUserId": 6
+}

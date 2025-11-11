@@ -70,30 +70,50 @@ body {
 .nav-logo {
   font-size: 1.5rem;
   font-weight: 800;
-  color: white;
+  color: black;
   text-decoration: none;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   list-style: none;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.85);
   font-weight: 500;
   transition: all 0.3s;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-links a:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
+  color: black;
+  background: rgba(0, 0, 0, 0.04);
   transform: translateY(-2px);
+}
+
+/* Navbar scoped button overrides so buttons in the navbar remain readable */
+.navbar .btn-outline {
+  background: rgba(0, 0, 0, 0.04);
+  color: black;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: none;
+}
+
+.navbar .btn-outline:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 .nav-auth {

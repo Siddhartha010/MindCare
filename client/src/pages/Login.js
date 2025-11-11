@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import API from '../utils/api';
+import emailjs from '@emailjs/browser';
+import emailService from '../utils/emailService';
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -10,12 +12,23 @@ const Login = ({ setUser }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [redirectTo, setRedirectTo] = useState('');
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError(''); // Clear any previous errors when user types
   };
+
+  useEffect(() => {
+    // Initialize EmailJS with public key
+    emailjs.init("8jtxHblCqXuUvqlfr");
+    console.log('EmailJS initialized');
+  }, []);
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,16 +36,39 @@ const Login = ({ setUser }) => {
     setError('');
 
     try {
+      // First handle login
       const response = await API.post('/api/auth/login', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      setUser(response.data.user);
+      
+      if (response.data && response.data.token) {
+        // Store auth data
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        // Set user immediately
+        setUser(response.data.user);
+        
+        // Check if user is admin and set redirect
+        if (response.data.user.is_admin) {
+          setRedirectTo('/admin');
+        }
+      } else {
+        throw new Error('Invalid response from server');
+      }
     } catch (error) {
-      setError(error.response?.data?.error || 'Login failed');
+      console.error('Login failed:', error);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setError(error.response?.data?.error || error.message || 'Login failed');
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
+
+  // Handle redirect for admin users
+  if (redirectTo) {
+    return <Navigate to={redirectTo} replace />;
+  }
 
   return (
     <div className="container">

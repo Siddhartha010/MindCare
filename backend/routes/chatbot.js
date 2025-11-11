@@ -1,9 +1,10 @@
 const express = require('express');
-const simpleDB = require('../config/simple-db');
+const { getPool } = require('../config/database');
+const pool = getPool();
 
 const router = express.Router();
 
-// AI Chatbot responses (simplified AI logic)
+// AI Chatbot responses
 const generateResponse = (message) => {
   const lowerMessage = message.toLowerCase();
   
@@ -32,7 +33,10 @@ router.post('/chat', async (req, res) => {
     const response = generateResponse(message);
     
     // Save chat history
-    simpleDB.createChatMessage(userId, message, response);
+    await pool.execute(`
+      INSERT INTO chat_history (user_id, message, response, category)
+      VALUES (?, ?, ?, ?)
+    `, [userId, message, response, 'general']);
     
     res.json({ response });
   } catch (error) {
@@ -45,7 +49,13 @@ router.get('/history/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     
-    const history = simpleDB.getChatHistory(parseInt(userId)).slice(-20);
+    const [history] = await pool.execute(`
+      SELECT * FROM chat_history 
+      WHERE user_id = ? 
+      ORDER BY created_at DESC 
+      LIMIT 20
+    `, [userId]);
+    
     res.json(history);
   } catch (error) {
     res.status(500).json({ error: error.message });
