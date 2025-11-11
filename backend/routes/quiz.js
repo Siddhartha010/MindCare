@@ -26,8 +26,14 @@ router.post('/submit', async (req, res) => {
   const pool = getPool();
   const connection = await pool.getConnection();
   try {
-    const { userId, responses, weekNumber } = req.body;
+    const { userId, responses } = req.body;
     const score = responses.reduce((total, response) => total + response, 0);
+    
+    // Get next week_number for this user
+    const [maxWeek] = await connection.execute(`
+      SELECT COALESCE(MAX(week_number), -1) + 1 as next_week FROM quiz_responses WHERE user_id = ?
+    `, [userId]);
+    const weekNumber = maxWeek[0].next_week;
     
     // Determine mental health level
     let level;
@@ -39,7 +45,7 @@ router.post('/submit', async (req, res) => {
     
     await connection.beginTransaction();
     
-    // Insert quiz response (no duplicate key update - allow multiple per day)
+    // Insert quiz response
     const [quizResult] = await connection.execute(`
       INSERT INTO quiz_responses (user_id, week_number, responses, score, mental_health_level, completion_time)
       VALUES (?, ?, ?, ?, ?, ?)
