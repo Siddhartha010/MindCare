@@ -49,7 +49,7 @@ const Quiz = ({ user }) => {
     setSubmitting(true);
     try {
       const responseArray = questions.map(q => responses[q.id] || 0);
-      const weekNumber = Math.ceil((Date.now() - new Date(user.created_at || Date.now())) / (7 * 24 * 60 * 60 * 1000));
+      const weekNumber = Date.now(); // Use timestamp instead of week number
       
       const response = await API.post('/api/quiz/submit', {
         userId: user.id,

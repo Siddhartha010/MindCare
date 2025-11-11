@@ -39,16 +39,10 @@ router.post('/submit', async (req, res) => {
     
     await connection.beginTransaction();
     
-    // Insert quiz response with duplicate key update
+    // Insert quiz response (no duplicate key update - allow multiple per day)
     const [quizResult] = await connection.execute(`
       INSERT INTO quiz_responses (user_id, week_number, responses, score, mental_health_level, completion_time)
       VALUES (?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE 
-        responses = VALUES(responses),
-        score = VALUES(score),
-        mental_health_level = VALUES(mental_health_level),
-        completion_time = VALUES(completion_time),
-        created_at = NOW()
     `, [userId, weekNumber, JSON.stringify(responses), score, level, 120]);
     
     // Get user statistics with complex query
