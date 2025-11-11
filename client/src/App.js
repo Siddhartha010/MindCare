@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Navbar from './components/Navbar';
 import ParticlesBackground from './components/ParticlesBackground';
 import API from './utils/api';
-import { ActivityProvider, useActivity } from './context/ActivityContext';
+
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -19,23 +19,7 @@ import UserActivities from './pages/UserActivities';
 import AdminDashboard from './pages/AdminDashboard';
 import './App.css';
 
-// Route tracking component
-const RouteTracker = ({ children, user }) => {
-  const location = useLocation();
-  const { logActivity } = useActivity();
-  
-  useEffect(() => {
-    if (user) {
-      logActivity(
-        'page_view',
-        `Visited ${location.pathname}`,
-        location.pathname
-      );
-    }
-  }, [location.pathname, user, logActivity]);
 
-  return children;
-};
 
 function App() {
   const [user, setUser] = useState(null);
@@ -74,11 +58,9 @@ function App() {
 
   return (
     <Router>
-      <ActivityProvider>
-        <RouteTracker user={user}>
-          <div className="App">
-            <ParticlesBackground />
-            <Navbar user={user} logout={logout} />
+      <div className="App">
+        <ParticlesBackground />
+        <Navbar user={user} logout={logout} />
             <Routes>
               <Route path="/" element={<Home user={user} />} />
               <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
@@ -94,9 +76,7 @@ function App() {
               <Route path="/admin" element={user?.is_admin ? <AdminDashboard /> : <Navigate to="/" />} />
               <Route path="/test" element={<TestLogin />} />
             </Routes>
-          </div>
-        </RouteTracker>
-      </ActivityProvider>
+      </div>
     </Router>
   );
 }
