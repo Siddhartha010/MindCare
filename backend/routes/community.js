@@ -1,12 +1,12 @@
 const express = require('express');
 const { getPool } = require('../config/database');
-const pool = getPool();
 
 const router = express.Router();
 
 // Get all questions with replies
 router.get('/questions', async (req, res) => {
   try {
+    const pool = getPool();
     const [questions] = await pool.execute(`
       SELECT 
         cq.*,
@@ -44,6 +44,7 @@ router.get('/questions', async (req, res) => {
 router.post('/questions', async (req, res) => {
   try {
     const { userId, title, content, category } = req.body;
+    const pool = getPool();
     
     const [result] = await pool.execute(`
       INSERT INTO community_questions (user_id, title, content, category)
@@ -64,6 +65,7 @@ router.post('/questions/:questionId/reply', async (req, res) => {
   try {
     const { questionId } = req.params;
     const { userId, content } = req.body;
+    const pool = getPool();
     
     const [result] = await pool.execute(`
       INSERT INTO community_replies (question_id, user_id, content)

@@ -1,6 +1,5 @@
 const express = require('express');
 const { getPool } = require('../config/database');
-const pool = getPool();
 
 const router = express.Router();
 
@@ -29,6 +28,7 @@ const generateResponse = (message) => {
 router.post('/chat', async (req, res) => {
   try {
     const { userId, message } = req.body;
+    const pool = getPool();
     
     const response = generateResponse(message);
     
@@ -48,6 +48,7 @@ router.post('/chat', async (req, res) => {
 router.get('/history/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    const pool = getPool();
     
     const [history] = await pool.execute(`
       SELECT * FROM chat_history 

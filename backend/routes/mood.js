@@ -1,6 +1,5 @@
 const express = require('express');
 const { getPool } = require('../config/database');
-const pool = getPool();
 
 const router = express.Router();
 
@@ -8,6 +7,7 @@ const router = express.Router();
 router.post('/save', async (req, res) => {
   try {
     const { userId, mood, note } = req.body;
+    const pool = getPool();
     
     const moodValues = {
       'Happy': 5, 'Grateful': 5, 'Calm': 4, 'Neutral': 3,
@@ -34,6 +34,7 @@ router.post('/save', async (req, res) => {
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    const pool = getPool();
     
     const [moodHistory] = await pool.execute(`
       SELECT * FROM mood_entries 

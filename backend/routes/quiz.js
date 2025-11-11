@@ -1,6 +1,5 @@
 const express = require('express');
 const { getPool } = require('../config/database');
-const pool = getPool();
 
 const router = express.Router();
 
@@ -24,6 +23,7 @@ router.get('/questions', (req, res) => {
 
 // Submit quiz with MySQL operations
 router.post('/submit', async (req, res) => {
+  const pool = getPool();
   const connection = await pool.getConnection();
   try {
     const { userId, responses, weekNumber } = req.body;

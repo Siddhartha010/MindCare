@@ -1,6 +1,5 @@
 const express = require('express');
 const { getPool } = require('../config/database');
-const pool = getPool();
 
 const router = express.Router();
 
@@ -8,6 +7,7 @@ const router = express.Router();
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    const pool = getPool();
     
     // Get user statistics
     const [stats] = await pool.execute(`

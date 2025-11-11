@@ -1,6 +1,5 @@
 const express = require('express');
 const { getPool } = require('../config/database');
-const pool = getPool();
 
 const router = express.Router();
 
@@ -8,6 +7,7 @@ const router = express.Router();
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    const pool = getPool();
     
     const [responses] = await pool.execute(`
       SELECT * FROM quiz_responses 
@@ -33,6 +33,7 @@ router.get('/:userId', async (req, res) => {
 router.get('/analytics/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    const pool = getPool();
     
     const [summary] = await pool.execute(`
       SELECT 
