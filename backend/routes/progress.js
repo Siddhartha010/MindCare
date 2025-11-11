@@ -15,13 +15,21 @@ router.get('/:userId', async (req, res) => {
       ORDER BY created_at DESC
     `, [userId]);
     
-    const progressData = responses.map(row => ({
-      week: row.week_number,
-      score: row.score,
-      level: row.mental_health_level,
-      date: row.created_at,
-      responses: JSON.parse(row.responses)
-    }));
+    const progressData = responses.map(row => {
+      let parsedResponses;
+      try {
+        parsedResponses = typeof row.responses === 'string' ? JSON.parse(row.responses) : row.responses;
+      } catch (e) {
+        parsedResponses = [];
+      }
+      return {
+        week: row.week_number,
+        score: row.score,
+        level: row.mental_health_level,
+        date: row.created_at,
+        responses: parsedResponses
+      };
+    });
     
     res.json(progressData);
   } catch (error) {

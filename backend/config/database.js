@@ -68,8 +68,7 @@ const initDB = async () => {
         mental_health_level VARCHAR(20) NOT NULL,
         completion_time INT DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_user_week (user_id, week_number)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
 

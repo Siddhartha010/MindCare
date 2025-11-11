@@ -24,6 +24,16 @@ router.post('/save', async (req, res) => {
         created_at = NOW()
     `, [userId, mood, moodValues[mood] || 3, note || '']);
     
+    // Update user statistics
+    await pool.execute(`
+      INSERT INTO user_statistics (user_id, total_mood_entries, wellness_points, last_activity)
+      VALUES (?, 1, 5, NOW())
+      ON DUPLICATE KEY UPDATE
+        total_mood_entries = total_mood_entries + 1,
+        wellness_points = wellness_points + 5,
+        last_activity = NOW()
+    `, [userId]);
+    
     res.json({ message: 'Mood saved successfully', id: result.insertId });
   } catch (error) {
     res.status(500).json({ error: error.message });
