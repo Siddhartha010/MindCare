@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import API from '../utils/api';
 import Gamification from '../components/Gamification';
 import { Line } from 'react-chartjs-2';
@@ -164,15 +165,15 @@ const Dashboard = ({ user }) => {
           {getRecommendation()}
         </div>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <a href="/chatbot" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+          <Link to="/chatbot" className="btn btn-primary" style={{ textDecoration: 'none' }}>
             🤖 Get AI Advice
-          </a>
-          <a href="/wellness" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to="/wellness" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
             💡 View Tips
-          </a>
-          <a href="/mood" className="btn btn-accent" style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to="/mood" className="btn btn-accent" style={{ textDecoration: 'none' }}>
             🌈 Track Mood
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -219,21 +220,21 @@ const Dashboard = ({ user }) => {
       <div className="card">
         <h3>🚀 Quick Actions</h3>
         <div className="grid grid-2" style={{ gap: '1rem', marginTop: '1rem' }}>
-          <a href="/mood" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+          <Link to="/mood" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
             🌈 Track Mood
-          </a>
-          <a href="/quiz" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to="/quiz" className="btn btn-primary" style={{ textDecoration: 'none' }}>
             📊 Take Assessment
-          </a>
-          <a href="/wellness" className="btn btn-accent" style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to="/wellness" className="btn btn-accent" style={{ textDecoration: 'none' }}>
             💡 Wellness Tips
-          </a>
-          <a href="/community" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to="/community" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
             💬 Community Q&A
-          </a>
-          <a href="/chatbot" className="btn btn-outline" style={{ textDecoration: 'none' }}>
+          </Link>
+          <Link to="/chatbot" className="btn btn-outline" style={{ textDecoration: 'none' }}>
             🤖 AI Assistant
-          </a>
+          </Link>
         </div>
         <button 
           onClick={async () => {
