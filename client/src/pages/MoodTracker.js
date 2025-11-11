@@ -45,11 +45,13 @@ const MoodTracker = ({ user }) => {
         note: note
       });
       
+      alert('✅ Mood saved successfully!');
       setSelectedMood('');
       setNote('');
       fetchMoodHistory();
     } catch (error) {
       console.error('Error saving mood:', error);
+      alert('❌ Error saving mood: ' + (error.response?.data?.error || error.message));
     } finally {
       setLoading(false);
     }

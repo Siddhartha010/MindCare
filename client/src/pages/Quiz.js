@@ -78,6 +78,9 @@ const Quiz = ({ user }) => {
     return (
       <div className="container">
         <div className="card" style={{ maxWidth: '600px', margin: '2rem auto', textAlign: 'center' }}>
+          <div style={{ background: '#10b981', color: 'white', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+            ✅ Your response has been recorded successfully!
+          </div>
           <h2>Quiz Complete! 🎉</h2>
           <div style={{ margin: '2rem 0' }}>
             <div style={{ fontSize: '3rem', margin: '1rem 0' }}>
@@ -88,6 +91,7 @@ const Quiz = ({ user }) => {
               Score: {result.score}/30
             </p>
             <p>{result.message}</p>
+            <p style={{ marginTop: '1rem', color: '#666' }}>Your results have been saved and will appear on your dashboard.</p>
           </div>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={() => window.location.reload()} className="btn btn-primary">
