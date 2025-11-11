@@ -11,13 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Serve React static files only in production. During development the
-// React dev server runs on :3000 and we prefer developers run that
-// separately (so `npm start` in `client`). This prevents the backend
-// `npm run dev` from serving the UI on :5000.
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-}
+// Backend only - frontend deployed separately
 
 // Test route
 app.get('/api/test', (req, res) => {
@@ -40,14 +34,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Serve React app for production builds. In development we don't
-// want the server to hijack the root so the React dev server can
-// handle hot reload on :3000.
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-  });
-}
+// Health check
+app.get('/', (req, res) => {
+  res.json({ status: 'MindCare API is running', version: '1.0.0' });
+});
 
 const startServer = async () => {
   try {
