@@ -16,6 +16,7 @@ const Navbar = ({ user, logout }) => {
               <li><Link to="/dashboard">Dashboard</Link></li>
               <li><Link to="/quiz">Quiz</Link></li>
               <li><Link to="/mood">Mood Tracker</Link></li>
+              <li><Link to="/breathing">Breathing</Link></li>
               <li><Link to="/chatbot">AI Assistant</Link></li>
               <li><Link to="/community">Community</Link></li>
             </>

@@ -53,6 +53,13 @@ const Home = ({ user }) => {
           </div>
           <p>Get personalized advice on diet, exercise, relaxation techniques, and mental wellness strategies.</p>
         </Link>
+
+        <Link to={user ? "/breathing" : "/login"} className="card feature-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <div className="card-header">
+            <h3 className="card-title">🫁 Breathing Exercise</h3>
+          </div>
+          <p>Practice guided breathing techniques to reduce stress, calm anxiety, and improve focus.</p>
+        </Link>
       </div>
 
       <div className="why-choose-section" style={{ marginTop: '4rem' }}>

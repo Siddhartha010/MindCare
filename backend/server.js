@@ -27,6 +27,8 @@ app.use('/api/mood', require('./routes/mood'));
 app.use('/api/gamification', require('./routes/gamification'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/community', require('./routes/community'));
+app.use('/api/breathing', require('./routes/breathing'));
+app.use('/api/activity', require('./routes/activity'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
